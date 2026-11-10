@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONEXA - Online Rewards</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f5fa;color:#172033}
+header{background:#101b35;color:white;padding:20px;text-align:center}
+header h1{margin:0;color:#42d6a4;letter-spacing:3px}
+.container{max-width:450px;margin:35px auto;padding:20px}
+.card{background:white;padding:25px;border-radius:16px;box-shadow:0 5px 25px #0001}
+h2{text-align:center}
+p{text-align:center;color:#667085}
+input{width:100%;padding:13px;margin:9px 0;border:1px solid #ddd;border-radius:9px;font-size:15px}
+button{width:100%;padding:14px;background:#13a77a;color:white;border:0;border-radius:9px;font-size:16px;font-weight:bold;margin-top:12px}
+.switch{text-align:center;margin-top:18px;color:#087c60;cursor:pointer}
+.hidden{display:none}
+footer{text-align:center;padding:25px;color:#777;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+<h1>MONEXA</h1>
+<p style="color:white">Learn • Earn • Grow</p>
+</header>
+
+<div class="container">
+<div class="card" id="home">
+<h2>Welcome to MONEXA</h2>
+<p>Your online rewards platform</p>
+<button onclick="showForm('register')">Create Account</button>
+<button onclick="showForm('login')" style="background:#243653">Login</button>
+</div>
+
+<div class="card hidden" id="register">
+<h2>Create Account</h2>
+<input id="name" placeholder="Full Name">
+<input id="email" type="email" placeholder="Email Address">
+<input id="password" type="password" placeholder="Create Password">
+<button onclick="registerUser()">Register</button>
+<div class="switch" onclick="showForm('login')">Already have an account? Login</div>
+<div class="switch" onclick="showForm('home')">Back Home</div>
+</div>
+
+<div class="card hidden" id="login">
+<h2>Login</h2>
+<input id="loginEmail" type="email" placeholder="Email Address">
+<input id="loginPassword" type="password" placeholder="Password">
+<button onclick="loginUser()">Login</button>
+<div class="switch" onclick="showForm('register')">Create a new account</div>
+<div class="switch" onclick="showForm('home')">Back Home</div>
+</div>
+</div>
+
+<footer>© 2026 MONEXA. All rights reserved.</footer>
+
+<script>
+function showForm(id){
+['home','register','login'].forEach(x=>
+document.getElementById(x).classList.add('hidden'));
+document.getElementById(id).classList.remove('hidden');
+}
+function registerUser(){
+alert('Firebase connection will be added in the next step.');
+}
+function loginUser(){
+alert('Firebase connection will be added in the next step.');
+}
+</script>
+</body>
+</html>
