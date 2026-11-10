@@ -5,263 +5,388 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MONEXA - Online Rewards</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f5fa;color:#172033}
-header{background:#101b35;color:white;padding:20px;text-align:center}
-header h1{margin:0;color:#42d6a4;letter-spacing:3px}
-.container{max-width:450px;margin:35px auto;padding:20px}
-.card{background:white;padding:25px;border-radius:16px;box-shadow:0 5px 25px #0001}
-h2{text-align:center}
-p{text-align:center;color:#667085}
-input{width:100%;padding:13px;margin:9px 0;border:1px solid #ddd;border-radius:9px;font-size:15px}
-button{width:100%;padding:14px;background:#13a77a;color:white;border:0;border-radius:9px;font-size:16px;font-weight:bold;margin-top:12px}
-.switch{text-align:center;margin-top:18px;color:#087c60;cursor:pointer}
-.hidden{display:none}
-#message{color:#d33;font-size:14px;text-align:center}
-footer{text-align:center;padding:25px;color:#777;font-size:13px}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f5fa;
+  color: #172033;
+}
+
+header {
+  background: #101b35;
+  color: white;
+  padding: 22px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  color: #42d6a4;
+  letter-spacing: 3px;
+}
+
+.container {
+  max-width: 450px;
+  margin: 35px auto;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 5px 25px #0001;
+}
+
+h2 {
+  text-align: center;
+}
+
+p {
+  text-align: center;
+  color: #667085;
+}
+
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 9px 0;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #13a77a;
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+}
+
+.switch {
+  text-align: center;
+  margin-top: 18px;
+  color: #087c60;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+#message {
+  color: #d33;
+  font-size: 14px;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #777;
+  font-size: 13px;
+}
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>MONEXA</h1>
-<p style="color:white">Learn • Earn • Grow</p>
+  <h1>MONEXA</h1>
+  <p style="color:white">Learn • Earn • Grow</p>
 </header>
 
 <div class="container">
 
-<div class="card" id="home">
-<h2>Welcome to MONEXA</h2>
-<p>Your online rewards platform</p>
-<button onclick="showForm('register')">Create Account</button>
-<button onclick="showForm('login')" style="background:#243653">Login</button>
+  <div class="card" id="home">
+    <h2>Welcome to MONEXA</h2>
+    <p>Your online rewards platform</p>
+
+    <button id="openRegister">Create Account</button>
+    <button id="openLogin" style="background:#243653">Login</button>
+  </div>
+
+  <div class="card hidden" id="register">
+    <h2>Create Account</h2>
+
+    <input id="name" placeholder="Full Name">
+    <input id="email" type="email" placeholder="Email Address">
+    <input id="password" type="password" placeholder="Create Password">
+
+    <button id="registerBtn">Register</button>
+
+    <div class="switch" id="goLogin">
+      Already have an account? Login
+    </div>
+
+    <div class="switch" id="backHome1">Back Home</div>
+  </div>
+
+  <div class="card hidden" id="login">
+    <h2>Login</h2>
+
+    <input id="loginEmail" type="email" placeholder="Email Address">
+    <input id="loginPassword" type="password" placeholder="Password">
+
+    <button id="loginBtn">Login</button>
+
+    <div class="switch" id="goRegister">
+      Create a new account
+    </div>
+
+    <div class="switch" id="backHome2">Back Home</div>
+  </div>
+
+  <div class="card hidden" id="dashboard">
+    <h2>Welcome to MONEXA!</h2>
+    <p id="userName">User</p>
+    <p>Your account is successfully connected.</p>
+    <button id="logoutBtn" style="background:#243653">Logout</button>
+  </div>
+
+  <p id="message"></p>
+
 </div>
 
-<div class="card hidden" id="register">
-<h2>Create Account</h2>
-<input id="name" placeholder="Full Name" autocomplete="name">
-<input id="email" type="email" placeholder="Email Address" autocomplete="email">
-<input id="password" type="password" placeholder="Create Password" autocomplete="new-password">
-<button id="registerBtn" onclick="registerUser()">Register</button>
-<div class="switch" onclick="showForm('login')">Already have an account? Login</div>
-<div class="switch" onclick="showForm('home')">Back Home</div>
-</div>
-
-<div class="card hidden" id="login">
-<h2>Login</h2>
-<input id="loginEmail" type="email" placeholder="Email Address" autocomplete="email">
-<input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
-<button id="loginBtn" onclick="loginUser()">Login</button>
-<div class="switch" onclick="showForm('register')">Create a new account</div>
-<div class="switch" onclick="showForm('home')">Back Home</div>
-</div>
-
-<div class="card hidden" id="dashboard">
-<h2>Welcome to MONEXA!</h2>
-<p id="userName">User</p>
-<p>Your account is successfully connected.</p>
-<button onclick="logoutUser()" style="background:#243653">Logout</button>
-</div>
-
-<p id="message"></p>
-</div>
-
-<footer>© 2026 MONEXA. All rights reserved.</footer>
+<footer>
+  © 2026 MONEXA. All rights reserved.
+</footer>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 
 import {
- getAuth,
- createUserWithEmailAndPassword,
- signInWithEmailAndPassword,
- updateProfile,
- onAuthStateChanged,
- signOut
-} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  onAuthStateChanged,
+  signOut
+} from
+"https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
- apiKey: "AIzaSyBHN63TCGlp8SzdP8MEJE3cNaG5SpmdymM",
- authDomain: "monexa-130af.firebaseapp.com",
- projectId: "monexa-130af",
- storageBucket: "monexa-130af.firebasestorage.app",
- messagingSenderId: "853347476896",
- appId: "1:853347476896:web:20562a60ccab9a2a75b0c5"
+  apiKey: "AIzaSyBHN63TCGlp8SzdP8MEJE3cNaG5SpmdymM",
+  authDomain: "monexa-130af.firebaseapp.com",
+  projectId: "monexa-130af",
+  storageBucket: "monexa-130af.firebasestorage.app",
+  messagingSenderId: "853347476896",
+  appId: "1:853347476896:web:20562a60ccab9a2a75b0c5"
 };
+
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 const message = document.getElementById("message");
 
-window.showForm = function(id){
- ['home','register','login','dashboard'].forEach(x=>{
-  document.getElementById(x).classList.add('hidden');
- });
- document.getElementById(id).classList.remove('hidden');
- message.textContent = "";
-};
 
-function showError(error){
- const errors = {
-  "auth/email-already-in-use":"This email already has an account.",
-  "auth/invalid-email":"Please enter a valid email.",
-  "auth/weak-password":"Password must be at least 6 characters.",
-  "auth/invalid-credential":"Incorrect email or password.",
-  "auth/network-request-failed":"Internet connection failed."
- };
- message.textContent = errors[error.code] || error.message;
-}
-
-window.registerUser = async function(){
- const name = document.getElementById("name").value.trim();
- const email = document.getElementById("email").value.trim();
- const password = document.getElementById("password").value;
-
- if(!name || !email || !password){
-  message.textContent = "Please fill in all fields.";
-  return;
- }
-
- if(password.length < 6){
-  message.textContent = "Password must be at least 6 characters.";
-  return;
- }
-
- const btn = document.getElementById("registerBtn");
- btn.disabled = true;
- btn.textContent = "Creating Account...";
-
- try{
-  const result = await createUserWithEmailAndPassword(auth,email,password);
-  await updateProfile(result.user,{displayName:name});
-  message.textContent = "Account created successfully!";
- }catch(error){
-  showError(error);
- }finally{
-  btn.disabled = false;
-  btn.textContent = "Register";
- }
-};
-
-window.loginUser = async function(){
- const email = document.getElementById("loginEmail").value.trim();
- const password = document.getElementById("loginPassword").value;
-
- if(!email || !password){
-  message.textContent = "Enter your email and password.";
-  return;
- }
-
- const btn = document.getElementById("loginBtn");
- btn.disabled = true;
- btn.textContent = "Logging in...";
-
- try{
-  await signInWithEmailAndPassword(auth,email,password);
-  message.textContent = "Login successful!";
- }catch(error){
-  showError(error);
- }finally{
-  btn.disabled = false;
-  btn.textContent = "Login";
- }
-};
-
-window.logoutUser = async function(){
- try{
-  await signOut(auth);
-  message.textContent = "Logged out successfully.";
- }catch(error){
-  showError(error);
- }
-};
-
-onAuthStateChanged(auth,user=>{
- if(user){
-  document.getElementById("userName").textContent =
-   "Hello, " + (user.displayName || user.email);
-  window.showForm("dashboard");
- }else{
-  window.showForm("home");
- }
-});
-</
-<.exists()) {
-  await setDoc(userRef, {
-   name: user.displayName || user.email,
-   email: user.email,
-   createdAt: serverTimestamp()
+function showForm(id) {
+  ["home", "register", "login", "dashboard"].forEach(x => {
+    document.getElementById(x).classList.add("hidden");
   });
- }
+
+  document.getElementById(id).classList.remove("hidden");
+  message.textContent = "";
 }
+
 
 function showError(error) {
- message.textContent = error.message;
+  const errors = {
+    "auth/email-already-in-use": "This email already has an account.",
+    "auth/invalid-email": "Please enter a valid email.",
+    "auth/weak-password": "Password must be at least 6 characters.",
+    "auth/invalid-credential": "Incorrect email or password.",
+    "auth/network-request-failed": "Check your internet connection."
+  };
+
+  message.textContent = errors[error.code] || error.message;
 }
 
-window.registerUser = async function() {
- const name = document.getElementById("name").value.trim();
- const email = document.getElementById("email").value.trim();
- const password = document.getElementById("password").value;
 
- if (!name || !email || !password) {
-  message.textContent = "Fill in all fields.";
-  return;
- }
+async function saveUser(user) {
+  const userRef = doc(db, "users", user.uid);
+  const snapshot = await getDoc(userRef);
 
- if (password.length < 6) {
-  message.textContent = "Password must be at least 6 characters.";
-  return;
- }
+  if (!snapshot.exists()) {
+    await setDoc(userRef, {
+      name: user.displayName || user.email,
+      email: user.email,
+      createdAt: serverTimestamp()
+    });
+  }
+}
 
- try {
-  const result = await createUserWithEmailAndPassword(auth, email, password);
-  await updateProfile(result.user, {displayName: name});
-  await saveUser(result.user);
-  message.textContent = "Account created and saved!";
- } catch(error) {
-  showError(error);
- }
-};
 
-window.loginUser = async function() {
- const email = document.getElementById("loginEmail").value.trim();
- const password = document.getElementById("loginPassword").value;
+// Navigation buttons
 
- if (!email || !password) {
-  message.textContent = "Enter email and password.";
-  return;
- }
+document.getElementById("openRegister").addEventListener("click", () => {
+  showForm("register");
+});
 
- try {
-  const result = await signInWithEmailAndPassword(auth, email, password);
-  await saveUser(result.user);
-  message.textContent = "Login successful!";
- } catch(error) {
-  showError(error);
- }
-};
+document.getElementById("openLogin").addEventListener("click", () => {
+  showForm("login");
+});
 
-window.logoutUser = async function() {
- try {
-  await signOut(auth);
-  message.textContent = "Logged out.";
- } catch(error) {
-  showError(error);
- }
-};
+document.getElementById("goLogin").addEventListener("click", () => {
+  showForm("login");
+});
+
+document.getElementById("goRegister").addEventListener("click", () => {
+  showForm("register");
+});
+
+document.getElementById("backHome1").addEventListener("click", () => {
+  showForm("home");
+});
+
+document.getElementById("backHome2").addEventListener("click", () => {
+  showForm("home");
+});
+
+
+// Registration
+
+document.getElementById("registerBtn").addEventListener("click", async () => {
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const btn = document.getElementById("registerBtn");
+
+  if (!name || !email || !password) {
+    message.textContent = "Please fill in all fields.";
+    return;
+  }
+
+  if (password.length < 6) {
+    message.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Creating Account...";
+
+  try {
+    const result = await createUserWithEmailAndPassword(
+      auth, email, password
+    );
+
+    await updateProfile(result.user, {
+      displayName: name
+    });
+
+    await saveUser(result.user);
+
+    message.textContent = "Account created successfully!";
+
+  } catch (error) {
+    showError(error);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Register";
+  }
+
+});
+
+
+// Login
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  const btn = document.getElementById("loginBtn");
+
+  if (!email || !password) {
+    message.textContent = "Enter your email and password.";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Logging in...";
+
+  try {
+    const result = await signInWithEmailAndPassword(
+      auth, email, password
+    );
+
+    await saveUser(result.user);
+
+    message.textContent = "Login successful!";
+
+  } catch (error) {
+    showError(error);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Login";
+  }
+
+});
+
+
+// Logout
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+
+  try {
+    await signOut(auth);
+    message.textContent = "Logged out successfully.";
+  } catch (error) {
+    showError(error);
+  }
+
+});
+
+
+// Check login status
 
 onAuthStateChanged(auth, user => {
- if (user) {
-  document.getElementById("userName").textContent =
-   "Hello, " + (user.displayName || user.email);
-  window.showForm("dashboard");
- } else {
-  window.showForm("home");
- }
+
+  if (user) {
+    document.getElementById("userName").textContent =
+      "Hello, " + (user.displayName || user.email);
+
+    showForm("dashboard");
+
+  } else {
+    showForm("home");
+  }
+
 });
+
 </script>
+
 </body>
 </html>
