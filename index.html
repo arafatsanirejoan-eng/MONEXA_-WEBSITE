@@ -7,9 +7,7 @@
 <title>MONEXA - Online Rewards</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -44,9 +42,7 @@ header h1 {
   box-shadow: 0 5px 25px #0001;
 }
 
-h2 {
-  text-align: center;
-}
+h2 { text-align: center; }
 
 p {
   text-align: center;
@@ -75,9 +71,7 @@ button {
   cursor: pointer;
 }
 
-button:disabled {
-  opacity: 0.6;
-}
+button:disabled { opacity: 0.6; }
 
 .switch {
   text-align: center;
@@ -86,14 +80,19 @@ button:disabled {
   cursor: pointer;
 }
 
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 
 #message {
   color: #d33;
   font-size: 14px;
   text-align: center;
+}
+
+.referral {
+  background: #f3f8f6;
+  padding: 15px;
+  border-radius: 12px;
+  margin: 18px 0;
 }
 
 footer {
@@ -117,53 +116,45 @@ footer {
   <div class="card" id="home">
     <h2>Welcome to MONEXA</h2>
     <p>Your online rewards platform</p>
-
     <button id="openRegister">Create Account</button>
     <button id="openLogin" style="background:#243653">Login</button>
   </div>
 
   <div class="card hidden" id="register">
     <h2>Create Account</h2>
-
     <input id="name" placeholder="Full Name">
     <input id="email" type="email" placeholder="Email Address">
     <input id="password" type="password" placeholder="Create Password">
-
     <button id="registerBtn">Register</button>
-
-    <div class="switch" id="goLogin">
-      Already have an account? Login
-    </div>
-
+    <div class="switch" id="goLogin">Already have an account? Login</div>
     <div class="switch" id="backHome1">Back Home</div>
   </div>
 
   <div class="card hidden" id="login">
     <h2>Login</h2>
-
     <input id="loginEmail" type="email" placeholder="Email Address">
     <input id="loginPassword" type="password" placeholder="Password">
-
     <button id="loginBtn">Login</button>
-
-    <div class="switch" id="goRegister">
-      Create a new account
-    </div>
-
+    <div class="switch" id="goRegister">Create a new account</div>
     <div class="switch" id="backHome2">Back Home</div>
   </div>
 
   <div class="card hidden" id="dashboard">
-    <hr>
-<h3>My Referral</h3>
-<p>Your Referral Code:</p>
-<h2 id="refCode">Loading...</h2>
-<p>Your Invite Link:</p>
-<input id="refLink" readonly>
-<p>Demo referral system</p>
     <h2>Welcome to MONEXA!</h2>
     <p id="userName">User</p>
     <p>Your account is successfully connected.</p>
+
+    <div class="referral">
+      <h3>My Referral</h3>
+      <p>Your Referral Code:</p>
+      <h2 id="refCode">Loading...</h2>
+
+      <p>Your Invite Link:</p>
+      <input id="refLink" readonly>
+      <button id="copyLinkBtn">Copy Invite Link</button>
+      <p id="copyMessage">Demo referral system</p>
+    </div>
+
     <button id="logoutBtn" style="background:#243653">Logout</button>
   </div>
 
@@ -199,7 +190,6 @@ import {
 } from
 "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyBHN63TCGlp8SzdP8MEJE3cNaG5SpmdymM",
   authDomain: "monexa-130af.firebaseapp.com",
@@ -209,13 +199,11 @@ const firebaseConfig = {
   appId: "1:853347476896:web:20562a60ccab9a2a75b0c5"
 };
 
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 const message = document.getElementById("message");
-
 
 function showForm(id) {
   ["home", "register", "login", "dashboard"].forEach(x => {
@@ -225,7 +213,6 @@ function showForm(id) {
   document.getElementById(id).classList.remove("hidden");
   message.textContent = "";
 }
-
 
 function showError(error) {
   const errors = {
@@ -238,7 +225,6 @@ function showError(error) {
 
   message.textContent = errors[error.code] || error.message;
 }
-
 
 async function saveUser(user) {
   const userRef = doc(db, "users", user.uid);
@@ -253,38 +239,41 @@ async function saveUser(user) {
   }
 }
 
+function showReferral(user) {
+  const code = user.uid.substring(0, 8).toUpperCase();
 
-// Navigation buttons
+  const inviteLink =
+    window.location.origin +
+    window.location.pathname +
+    "?ref=" + code;
 
-document.getElementById("openRegister").addEventListener("click", () => {
-  showForm("register");
-});
+  document.getElementById("refCode").textContent = code;
+  document.getElementById("refLink").value = inviteLink;
+}
 
-document.getElementById("openLogin").addEventListener("click", () => {
-  showForm("login");
-});
+// Navigation
 
-document.getElementById("goLogin").addEventListener("click", () => {
-  showForm("login");
-});
+document.getElementById("openRegister").onclick =
+  () => showForm("register");
 
-document.getElementById("goRegister").addEventListener("click", () => {
-  showForm("register");
-});
+document.getElementById("openLogin").onclick =
+  () => showForm("login");
 
-document.getElementById("backHome1").addEventListener("click", () => {
-  showForm("home");
-});
+document.getElementById("goLogin").onclick =
+  () => showForm("login");
 
-document.getElementById("backHome2").addEventListener("click", () => {
-  showForm("home");
-});
+document.getElementById("goRegister").onclick =
+  () => showForm("register");
 
+document.getElementById("backHome1").onclick =
+  () => showForm("home");
+
+document.getElementById("backHome2").onclick =
+  () => showForm("home");
 
 // Registration
 
-document.getElementById("registerBtn").addEventListener("click", async () => {
-
+document.getElementById("registerBtn").onclick = async () => {
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
@@ -323,14 +312,11 @@ document.getElementById("registerBtn").addEventListener("click", async () => {
     btn.disabled = false;
     btn.textContent = "Register";
   }
-
-});
-
+};
 
 // Login
 
-document.getElementById("loginBtn").addEventListener("click", async () => {
-
+document.getElementById("loginBtn").onclick = async () => {
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
 
@@ -350,7 +336,6 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     );
 
     await saveUser(result.user);
-
     message.textContent = "Login successful!";
 
   } catch (error) {
@@ -359,38 +344,47 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     btn.disabled = false;
     btn.textContent = "Login";
   }
+};
 
-});
+// Copy referral link
 
+document.getElementById("copyLinkBtn").onclick = async () => {
+  const link = document.getElementById("refLink").value;
+
+  try {
+    await navigator.clipboard.writeText(link);
+    document.getElementById("copyMessage").textContent =
+      "Invite link copied!";
+  } catch (error) {
+    document.getElementById("refLink").select();
+    document.getElementById("copyMessage").textContent =
+      "Select and copy the link manually.";
+  }
+};
 
 // Logout
 
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-
+document.getElementById("logoutBtn").onclick = async () => {
   try {
     await signOut(auth);
     message.textContent = "Logged out successfully.";
   } catch (error) {
     showError(error);
   }
-
-});
-
+};
 
 // Check login status
 
 onAuthStateChanged(auth, user => {
-
   if (user) {
     document.getElementById("userName").textContent =
       "Hello, " + (user.displayName || user.email);
 
+    showReferral(user);
     showForm("dashboard");
-
   } else {
     showForm("home");
   }
-
 });
 
 </script>
