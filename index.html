@@ -18,16 +18,19 @@ input{width:100%;padding:13px;margin:9px 0;border:1px solid #ddd;border-radius:9
 button{width:100%;padding:14px;background:#13a77a;color:white;border:0;border-radius:9px;font-size:16px;font-weight:bold;margin-top:12px}
 .switch{text-align:center;margin-top:18px;color:#087c60;cursor:pointer}
 .hidden{display:none}
+#message{color:#d33;font-size:14px;text-align:center}
 footer{text-align:center;padding:25px;color:#777;font-size:13px}
 </style>
 </head>
 <body>
+
 <header>
 <h1>MONEXA</h1>
 <p style="color:white">Learn • Earn • Grow</p>
 </header>
 
 <div class="container">
+
 <div class="card" id="home">
 <h2>Welcome to MONEXA</h2>
 <p>Your online rewards platform</p>
@@ -37,38 +40,154 @@ footer{text-align:center;padding:25px;color:#777;font-size:13px}
 
 <div class="card hidden" id="register">
 <h2>Create Account</h2>
-<input id="name" placeholder="Full Name">
-<input id="email" type="email" placeholder="Email Address">
-<input id="password" type="password" placeholder="Create Password">
-<button onclick="registerUser()">Register</button>
+<input id="name" placeholder="Full Name" autocomplete="name">
+<input id="email" type="email" placeholder="Email Address" autocomplete="email">
+<input id="password" type="password" placeholder="Create Password" autocomplete="new-password">
+<button id="registerBtn" onclick="registerUser()">Register</button>
 <div class="switch" onclick="showForm('login')">Already have an account? Login</div>
 <div class="switch" onclick="showForm('home')">Back Home</div>
 </div>
 
 <div class="card hidden" id="login">
 <h2>Login</h2>
-<input id="loginEmail" type="email" placeholder="Email Address">
-<input id="loginPassword" type="password" placeholder="Password">
-<button onclick="loginUser()">Login</button>
+<input id="loginEmail" type="email" placeholder="Email Address" autocomplete="email">
+<input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
+<button id="loginBtn" onclick="loginUser()">Login</button>
 <div class="switch" onclick="showForm('register')">Create a new account</div>
 <div class="switch" onclick="showForm('home')">Back Home</div>
 </div>
+
+<div class="card hidden" id="dashboard">
+<h2>Welcome to MONEXA!</h2>
+<p id="userName">User</p>
+<p>Your account is successfully connected.</p>
+<button onclick="logoutUser()" style="background:#243653">Logout</button>
+</div>
+
+<p id="message"></p>
 </div>
 
 <footer>© 2026 MONEXA. All rights reserved.</footer>
 
-<script>
-function showForm(id){
-['home','register','login'].forEach(x=>
-document.getElementById(x).classList.add('hidden'));
-document.getElementById(id).classList.remove('hidden');
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+
+import {
+ getAuth,
+ createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,
+ updateProfile,
+ onAuthStateChanged,
+ signOut
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+const firebaseConfig = {
+ apiKey: "AIzaSyBHN63TCGlp8SzdP8MEJE3cNaG5SpmdymM",
+ authDomain: "monexa-130af.firebaseapp.com",
+ projectId: "monexa-130af",
+ storageBucket: "monexa-130af.firebasestorage.app",
+ messagingSenderId: "853347476896",
+ appId: "1:853347476896:web:20562a60ccab9a2a75b0c5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const message = document.getElementById("message");
+
+window.showForm = function(id){
+ ['home','register','login','dashboard'].forEach(x=>{
+  document.getElementById(x).classList.add('hidden');
+ });
+ document.getElementById(id).classList.remove('hidden');
+ message.textContent = "";
+};
+
+function showError(error){
+ const errors = {
+  "auth/email-already-in-use":"This email already has an account.",
+  "auth/invalid-email":"Please enter a valid email.",
+  "auth/weak-password":"Password must be at least 6 characters.",
+  "auth/invalid-credential":"Incorrect email or password.",
+  "auth/network-request-failed":"Internet connection failed."
+ };
+ message.textContent = errors[error.code] || error.message;
 }
-function registerUser(){
-alert('Firebase connection will be added in the next step.');
-}
-function loginUser(){
-alert('Firebase connection will be added in the next step.');
-}
+
+window.registerUser = async function(){
+ const name = document.getElementById("name").value.trim();
+ const email = document.getElementById("email").value.trim();
+ const password = document.getElementById("password").value;
+
+ if(!name || !email || !password){
+  message.textContent = "Please fill in all fields.";
+  return;
+ }
+
+ if(password.length < 6){
+  message.textContent = "Password must be at least 6 characters.";
+  return;
+ }
+
+ const btn = document.getElementById("registerBtn");
+ btn.disabled = true;
+ btn.textContent = "Creating Account...";
+
+ try{
+  const result = await createUserWithEmailAndPassword(auth,email,password);
+  await updateProfile(result.user,{displayName:name});
+  message.textContent = "Account created successfully!";
+ }catch(error){
+  showError(error);
+ }finally{
+  btn.disabled = false;
+  btn.textContent = "Register";
+ }
+};
+
+window.loginUser = async function(){
+ const email = document.getElementById("loginEmail").value.trim();
+ const password = document.getElementById("loginPassword").value;
+
+ if(!email || !password){
+  message.textContent = "Enter your email and password.";
+  return;
+ }
+
+ const btn = document.getElementById("loginBtn");
+ btn.disabled = true;
+ btn.textContent = "Logging in...";
+
+ try{
+  await signInWithEmailAndPassword(auth,email,password);
+  message.textContent = "Login successful!";
+ }catch(error){
+  showError(error);
+ }finally{
+  btn.disabled = false;
+  btn.textContent = "Login";
+ }
+};
+
+window.logoutUser = async function(){
+ try{
+  await signOut(auth);
+  message.textContent = "Logged out successfully.";
+ }catch(error){
+  showError(error);
+ }
+};
+
+onAuthStateChanged(auth,user=>{
+ if(user){
+  document.getElementById("userName").textContent =
+   "Hello, " + (user.displayName || user.email);
+  window.showForm("dashboard");
+ }else{
+  window.showForm("home");
+ }
+});
 </script>
+
 </body>
 </html>
